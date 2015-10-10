@@ -71,8 +71,10 @@ function update () {
     //  Enable physics between the knocker and the ball
     game.physics.arcade.collide(paddle, bomb);
 
-    bomb.angle = 77; // TODO: calculate angle from direction of the bomb
-
+    if (bomb.deltaX) {
+      var ratio = bomb.deltaY / bomb.deltaX;
+      bomb.angle = Math.atan(ratio) * 180 / Math.PI + (bomb.deltaX < 0 ? 180 : 0);
+    }
 }
 
 function render () {
