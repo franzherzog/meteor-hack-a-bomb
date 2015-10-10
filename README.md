@@ -5,7 +5,7 @@ todo:
  - [X] install meteor
  - [X] add library
   - [X] phaser.io
- - canvas / Spielfeld
+ - [X] canvas / Spielfeld
  - paddle
     - sprite
  - ball 
