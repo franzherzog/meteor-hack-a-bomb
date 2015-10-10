@@ -16,10 +16,6 @@ var VectorSchema = new SimpleSchema({
 });
 
 HackABomb.BombVectors.Schema = new SimpleSchema({
-    game_id: {
-        type: String,
-        regEx: SimpleSchema.RegEx.Id
-    },
     position: {
         type: VectorSchema
     },
@@ -28,4 +24,4 @@ HackABomb.BombVectors.Schema = new SimpleSchema({
     }
 });
 
-HackABomb.BombVectors.attachSchema(HackABomb.BombVectors.Schema);
+//HackABomb.BombVectors.attachSchema(HackABomb.BombVectors.Schema);

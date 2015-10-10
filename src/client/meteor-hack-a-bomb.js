@@ -1,81 +1,102 @@
 // counter starts at 0
-  Session.setDefault('counter', 0);
+Session.setDefault('counter', 0);
 
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
-    }
-  });
+Template.hello.helpers({
+  counter: function() {
+    return Session.get('counter');
+  }
+});
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
+Template.hello.events({
+  'click button': function() {
+    // increment the counter when button is clicked
+    Session.set('counter', Session.get('counter') + 1);
+  }
+});
 
 // mods by Patrick OReilly
 // Twitter: @pato_reilly Web: http://patricko.byethost9.com
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'hack-a-bomb', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'hack-a-bomb', {
+  preload: preload,
+  create: create,
+  update: update,
+  render: render
+});
 
 function preload() {
-
-    game.load.image('paddle', 'assets/sprites/paddle.png');
-    game.load.image('puck', 'assets/sprites/puck.png');
-    game.load.image('bomb', 'assets/sprites/bomb.png');
-
+  game.load.image('paddle', 'assets/sprites/paddle.png');
+  game.load.image('meteor', 'assets/sprites/meteor.png');
 }
 
-var image;
+var paddle;
 
 function create() {
+  game.physics.startSystem(Phaser.Physics.P2JS);
+  game.physics.p2.restitution = 0.9;
 
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+//  starfield = game.add.tileSprite(0, 0, 800, 600, 'stars');
+//  starfield.fixedToCamera = true;
 
-    //  This creates a simple sprite that is using our loaded image and
-    //  displays it on-screen
-    //  and assign it to a variable
-    bomb = game.add.sprite(400, 200, 'bomb');
+  var meteor = game.add.sprite(game.world.randomX, game.world.randomY, 'meteor');
+  game.physics.p2.enable(meteor, false);
+  meteor.body.setRectangle(40, 40, 0, 0);
 
-    paddle = game.add.sprite(400, 200, 'paddle');
+  paddle = game.add.sprite(400, 400, 'paddle');
+  paddle.smoothed = false;
+  //ship.animations.add('fly', [0,1,2,3,4,5], 10, true);
+  //ship.play('fly');
 
-    game.physics.enable([paddle,bomb], Phaser.Physics.ARCADE);
+  //  Create our physics body - a 28px radius circle. Set the 'false' parameter below to 'true' to enable debugging
+  game.physics.p2.enable(paddle, false);
 
-    paddle.body.immovable = true;
+  paddle.body.setCircle(56);
+  //ship.body.fixedRotation = true;
 
-      //  Input Enable the sprites
-    	paddle.inputEnabled = true;
-
-    //  Allow dragging
-    //  enableDrag parameters = (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite)
-    paddle.input.enableDrag();
-
-
-    //  This gets it moving
-    bomb.body.velocity.setTo(200, 200);
-
-    //  This makes the game world bounce-able
-    bomb.body.collideWorldBounds = true;
-
-    //  This sets the image bounce energy for the horizontal
-    //  and vertical vectors (as an x,y point). "1" is 100% energy return
-    bomb.body.bounce.setTo(1, 1);
+  //  Here we create a Body specific callback.
+  //  Note that only impact events between the ship and the panda are used here, the sweet/candy object is ignored.
+//  meteor.body.createBodyCallback(world, hitmeteor, this);
+  meteor.events.onOutOfBounds.add(hitmeteor, this);
 
 
-}
+  //  And before this will happen, we need to turn on impact events for the world
+  game.physics.p2.setImpactEvents(true);
 
-//  Move the knocker with the arrow keys
-function update () {
-
-    //  Enable physics between the knocker and the ball
-    game.physics.arcade.collide(paddle, bomb);
+  paddle.inputEnabled = true;
+  paddle.input.enableDrag(true);
+  paddle.body.immovable = true;
 
 }
 
-function render () {
+function hitmeteor(event){
+  console.log('meteor hit',event);
+  HackABomb.BombVectors.insert({
+    'position':{
+      x: 3,
+      y:5
+    },
+    'motion':{
+      x:3,
+      y:3
+    }
+  });
+}
+function update() {
+  //reset paddle velocety after collision
+  paddle.body.setZeroVelocity();
 
-    //debug helper
-    game.debug.spriteInfo(bomb, 32, 32);
+  // is dragable workaround
+  if (paddle.input.isDragged) {
+    //BODY => follow pointer
+    if (paddle.body !== null) {
+      paddle.body.x = game.input.activePointer.worldX;
+      paddle.body.y = game.input.activePointer.worldY;
+    }
+  }
+}
+
+function render() {
+
+  //debug helper
 
 }
