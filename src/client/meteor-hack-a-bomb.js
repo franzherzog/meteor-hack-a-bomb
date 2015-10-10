@@ -23,7 +23,7 @@ function preload() {
 
     game.load.image('paddle', 'assets/sprites/paddle.png');
     game.load.image('puck', 'assets/sprites/puck.png');
-    game.load.image('bomb', 'assets/sprites/bomb.png');
+    game.load.image('bomb', 'assets/sprites/meteor.png');
 
 }
 
@@ -70,6 +70,8 @@ function update () {
 
     //  Enable physics between the knocker and the ball
     game.physics.arcade.collide(paddle, bomb);
+
+    bomb.angle = 77; // TODO: calculate angle from direction of the bomb
 
 }
 
