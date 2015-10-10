@@ -93,6 +93,11 @@ function update() {
       paddle.body.y = game.input.activePointer.worldY;
     }
   }
+
+    if (bomb.deltaX) {
+      var ratio = bomb.deltaY / bomb.deltaX;
+      bomb.angle = Math.atan(ratio) * 180 / Math.PI + (bomb.deltaX < 0 ? 180 : 0);
+    }
 }
 
 function render() {
