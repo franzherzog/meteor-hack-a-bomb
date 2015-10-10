@@ -1,19 +1,3 @@
-// counter starts at 0
-Session.setDefault('counter', 0);
-
-Template.hello.helpers({
-  counter: function() {
-    return Session.get('counter');
-  }
-});
-
-Template.hello.events({
-  'click button': function() {
-    // increment the counter when button is clicked
-    Session.set('counter', Session.get('counter') + 1);
-  }
-});
-
 // mods by Patrick OReilly
 // Twitter: @pato_reilly Web: http://patricko.byethost9.com
 
@@ -38,11 +22,12 @@ function create() {
 //  starfield = game.add.tileSprite(0, 0, 800, 600, 'stars');
 //  starfield.fixedToCamera = true;
 
-  var meteor = game.add.sprite(game.world.randomX, game.world.randomY, 'meteor');
+  meteor = game.add.sprite(game.world.randomX, game.world.randomY, 'meteor');
   game.physics.p2.enable(meteor, false);
   meteor.body.setRectangle(40, 40, 0, 0);
 
   paddle = game.add.sprite(400, 400, 'paddle');
+  paddle.scale.set(0.25);
   paddle.smoothed = false;
   //ship.animations.add('fly', [0,1,2,3,4,5], 10, true);
   //ship.play('fly');
@@ -51,7 +36,7 @@ function create() {
   game.physics.p2.enable(paddle, false);
 
   paddle.body.setCircle(56);
-  //ship.body.fixedRotation = true;
+  meteor.body.fixedRotation = true;
 
   //  Here we create a Body specific callback.
   //  Note that only impact events between the ship and the panda are used here, the sweet/candy object is ignored.
@@ -94,10 +79,10 @@ function update() {
     }
   }
 
-    if (bomb.deltaX) {
-      var ratio = bomb.deltaY / bomb.deltaX;
-      bomb.angle = Math.atan(ratio) * 180 / Math.PI + (bomb.deltaX < 0 ? 180 : 0);
-    }
+  if (meteor.deltaX) {
+    var ratio = meteor.deltaY / meteor.deltaX;
+    meteor.angle = Math.atan(ratio) * 180 / Math.PI + (meteor.deltaX < 0 ? 180 : 0);
+  }
 }
 
 function render() {
