@@ -2,10 +2,10 @@
 simple bomb game
 
 todo:
- - install meteor
- - add library
-  - phaser.io
- - canvas
+ - [X] install meteor
+ - [X] add library
+  - [X] phaser.io
+ - canvas / Spielfeld
  - paddle
     - sprite
  - ball 
