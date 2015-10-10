@@ -24,7 +24,7 @@ function preload() {
     game.load.image('paddle', 'assets/sprites/paddle.png');
     game.load.image('puck', 'assets/sprites/puck.png');
     game.load.image('bomb', 'assets/sprites/bomb.png');
-    
+
 }
 
 var image;
@@ -33,28 +33,34 @@ function create() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    cursors = game.input.keyboard.createCursorKeys();
-
     //  This creates a simple sprite that is using our loaded image and
     //  displays it on-screen
     //  and assign it to a variable
-    ball = game.add.sprite(400, 200, 'ball');
+    bomb = game.add.sprite(400, 200, 'bomb');
 
-    knocker = game.add.sprite(400, 200, 'dude');
+    paddle = game.add.sprite(400, 200, 'paddle');
 
-    game.physics.enable([knocker,ball], Phaser.Physics.ARCADE);
+    game.physics.enable([paddle,bomb], Phaser.Physics.ARCADE);
 
-    knocker.body.immovable = true;
+    paddle.body.immovable = true;
+
+      //  Input Enable the sprites
+    	paddle.inputEnabled = true;
+
+    //  Allow dragging
+    //  enableDrag parameters = (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite)
+    paddle.input.enableDrag();
+
 
     //  This gets it moving
-    ball.body.velocity.setTo(200, 200);
+    bomb.body.velocity.setTo(200, 200);
 
     //  This makes the game world bounce-able
-    ball.body.collideWorldBounds = true;
+    bomb.body.collideWorldBounds = true;
 
     //  This sets the image bounce energy for the horizontal
     //  and vertical vectors (as an x,y point). "1" is 100% energy return
-    ball.body.bounce.setTo(1, 1);
+    bomb.body.bounce.setTo(1, 1);
 
 
 }
@@ -63,34 +69,13 @@ function create() {
 function update () {
 
     //  Enable physics between the knocker and the ball
-    game.physics.arcade.collide(knocker, ball);
-
-    if (cursors.up.isDown)
-    {
-        knocker.body.velocity.y = -300;
-    }
-    else if (cursors.down.isDown)
-    {
-        knocker.body.velocity.y =  300;
-    }
-    else if (cursors.left.isDown)
-    {
-        knocker.body.velocity.x = -300;
-    }
-    else if (cursors.right.isDown)
-    {
-        knocker.body.velocity.x = 300;
-    }
-    else
-    {
-        knocker.body.velocity.setTo(0, 0);
-    }
+    game.physics.arcade.collide(paddle, bomb);
 
 }
 
 function render () {
 
     //debug helper
-    game.debug.spriteInfo(ball, 32, 32);
+    game.debug.spriteInfo(bomb, 32, 32);
 
 }
